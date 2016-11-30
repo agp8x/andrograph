@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import org.agp8x.android.lib.andrograph.Coordinate;
+import org.agp8x.android.lib.andrograph.DefaultEdgePaintProvider;
+import org.agp8x.android.lib.andrograph.EdgePaintProvider;
 import org.agp8x.android.lib.andrograph.GraphViewController;
 import org.agp8x.android.lib.andrograph.MapPositionProvider;
 import org.agp8x.android.lib.andrograph.PositionProvider;
@@ -25,7 +27,8 @@ public class Andrograph extends AppCompatActivity {
         tv.setText(TestData.graphToDot(graph));
         GraphView<String, DefaultEdge> gv = (GraphView<String, DefaultEdge>) findViewById(R.id.graphview);
         PositionProvider<String> positionProvider = new MapPositionProvider<>(TestData.getStringDefaultEdgeSimpleGraphPositions(), new Coordinate(0.5, 0.8));
-        GraphViewController<String, DefaultEdge> gvc = new GraphViewController<>(graph, positionProvider);
+        EdgePaintProvider<DefaultEdge> epp = new DefaultEdgePaintProvider<>();
+        GraphViewController<String, DefaultEdge> gvc = new GraphViewController<>(graph, positionProvider, epp);
 
         gv.setController(gvc);
     }

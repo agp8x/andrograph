@@ -11,8 +11,10 @@ import android.view.View;
 
 import org.agp8x.android.lib.andrograph.Coordinate;
 import org.agp8x.android.lib.andrograph.GraphViewController;
+import org.jgrapht.Graph;
+import org.jgrapht.graph.DefaultEdge;
 
-public class GraphView<V, E> extends View {
+public class GraphView<V, E extends DefaultEdge> extends View {
     private GraphViewController<V, E> controller;
     private Paint paint;
     private int radius;
@@ -51,13 +53,13 @@ public class GraphView<V, E> extends View {
         setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                boolean update=false;
+                boolean update = false;
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         if (dragging.object == null) {
                             Coordinate action = event2coordinate(motionEvent);
                             V obj = controller.getSelected(action);
-                            System.out.println("find new object@"+action);
+                            System.out.println("find new object@" + action);
                             if (obj != null) {
                                 System.out.println("found new obj: " + obj);
                                 dragging.object = obj;
@@ -69,7 +71,7 @@ public class GraphView<V, E> extends View {
                     case MotionEvent.ACTION_MOVE:
                         if (dragging.object != null) {
                             dragging.xy = event2pair(motionEvent);
-                            update=true;
+                            update = true;
                         }
                         break;
                     case MotionEvent.ACTION_UP:
@@ -77,12 +79,12 @@ public class GraphView<V, E> extends View {
                         if (dragging.object != null) {
                             dragging.xy = event2pair(motionEvent);
                             controller.update(dragging.old, pair2coordinate(dragging.xy));
-                            dragging.object=null;
-                            update=true;
+                            dragging.object = null;
+                            update = true;
                         }
                         break;
                 }
-                if (update){
+                if (update) {
                     invalidate();
                 }
                 return true;
@@ -109,7 +111,8 @@ public class GraphView<V, E> extends View {
         contentHeight = getHeight() - paddingTop - paddingBottom;
         Coordinate c;
         Pair<Float, Float> xy;
-        for (V v : controller.getGraph().vertexSet()) {
+        Graph<V, E> g = controller.getGraph();
+        for (V v : g.vertexSet()) {
             if (v.equals(dragging.object)) {
                 xy = dragging.xy;
             } else {
@@ -117,7 +120,21 @@ public class GraphView<V, E> extends View {
                 xy = coordinate2view(c);
             }
             canvas.drawCircle(xy.first, xy.second, radius, paint);
+            for (E edge : g.edgeSet()) {
+                Pair<Float, Float> xy1 = vertex2view(g.getEdgeSource(edge));
+                Pair<Float, Float> xy2 = vertex2view(g.getEdgeTarget(edge));
+                Paint p = controller.getEdgePaint(edge);
+                System.out.println(xy1+"; "+xy2+" - "+ p);
+                canvas.drawLine(xy1.first, xy1.second, xy2.first, xy2.second, p);
+            }
         }
+    }
+
+    private Pair<Float, Float> vertex2view(V vertex) {
+        if (vertex.equals(dragging.object)){
+            return dragging.xy;
+        }
+        return coordinate2view(controller.getPosition(vertex));
     }
 
     private Pair<Float, Float> coordinate2view(Coordinate coordinate) {
