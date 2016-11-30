@@ -9,11 +9,15 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="org.agp8x.android.lib.andrograph.Andrograph">
+    tools:context="org.agp8x.android.lib.andrograph.activity.Andrograph">
 
     <TextView
         android:id="@+id/textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hello World!"/>
+    <org.agp8x.android.lib.andrograph.view.GraphView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/graphview"/>
 </RelativeLayout>
