@@ -2,10 +2,12 @@ package org.agp8x.android.lib.andrograph;
 
 import android.graphics.Paint;
 
-/**
- * Created by clemensk on 30.11.16.
+/**define style of edges
+ * @author clemensk
+ *         <p>
+ *         30.11.16.
  */
 
 public interface EdgePaintProvider<E> {
-    Paint get(E edge);
+    Paint getEdgePaint(E edge);
 }

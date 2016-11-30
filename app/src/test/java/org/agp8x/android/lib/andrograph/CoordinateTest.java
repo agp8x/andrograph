@@ -2,8 +2,6 @@ package org.agp8x.android.lib.andrograph;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 /**
  * Created by clemensk on 30.11.16.
  */

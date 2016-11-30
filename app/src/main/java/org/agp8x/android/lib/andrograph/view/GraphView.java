@@ -2,7 +2,6 @@ package org.agp8x.android.lib.andrograph.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.Pair;
@@ -13,11 +12,12 @@ import org.agp8x.android.lib.andrograph.Coordinate;
 import org.agp8x.android.lib.andrograph.GraphViewController;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
-
+/* * @author  clemensk
+ *
+ * 30.11.16.
+ */
 public class GraphView<V, E extends DefaultEdge> extends View {
     private GraphViewController<V, E> controller;
-    private Paint paint;
-    private int radius;
     private Dragging dragging;
     private int contentWidth;
     private int contentHeight;
@@ -43,12 +43,6 @@ public class GraphView<V, E extends DefaultEdge> extends View {
     }
 
     private void init(AttributeSet attrs, int defStyle) {
-        paint = new Paint();
-        paint.setColor(Color.RED);
-        paint.setStrokeWidth(5);
-        paint.setAntiAlias(true);
-
-        radius = 25;
         dragging = new Dragging();
         setOnTouchListener(new OnTouchListener() {
             @Override
@@ -65,7 +59,12 @@ public class GraphView<V, E extends DefaultEdge> extends View {
                                 dragging.object = obj;
                                 dragging.old = controller.getPosition(obj);
                                 dragging.xy = event2pair(motionEvent);
+                            } else {
+                                System.out.println("create new obj");
+                                V vertex = controller.addVertex();
+                                controller.setPosition(vertex, event2coordinate(motionEvent));
                             }
+                            update = true;
                         }
                         break;
                     case MotionEvent.ACTION_MOVE:
@@ -112,26 +111,30 @@ public class GraphView<V, E extends DefaultEdge> extends View {
         Coordinate c;
         Pair<Float, Float> xy;
         Graph<V, E> g = controller.getGraph();
+        Paint vertexPaint;
+        int radius;
         for (V v : g.vertexSet()) {
             if (v.equals(dragging.object)) {
                 xy = dragging.xy;
+                vertexPaint = controller.getSelectedPaint(v);
             } else {
                 c = controller.getPosition(v);
                 xy = coordinate2view(c);
+                vertexPaint = controller.getVertexPaint(v);
             }
-            canvas.drawCircle(xy.first, xy.second, radius, paint);
+            radius = controller.getRadius(v);
+            canvas.drawCircle(xy.first, xy.second, radius, vertexPaint);
             for (E edge : g.edgeSet()) {
                 Pair<Float, Float> xy1 = vertex2view(g.getEdgeSource(edge));
                 Pair<Float, Float> xy2 = vertex2view(g.getEdgeTarget(edge));
                 Paint p = controller.getEdgePaint(edge);
-                System.out.println(xy1+"; "+xy2+" - "+ p);
                 canvas.drawLine(xy1.first, xy1.second, xy2.first, xy2.second, p);
             }
         }
     }
 
     private Pair<Float, Float> vertex2view(V vertex) {
-        if (vertex.equals(dragging.object)){
+        if (vertex.equals(dragging.object)) {
             return dragging.xy;
         }
         return coordinate2view(controller.getPosition(vertex));

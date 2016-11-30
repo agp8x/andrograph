@@ -13,8 +13,10 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by clemensk on 30.11.16.
+/** Helper to create a dummy graph
+ * @author  clemensk
+ *
+ * 30.11.16.
  */
 
 public class TestData {

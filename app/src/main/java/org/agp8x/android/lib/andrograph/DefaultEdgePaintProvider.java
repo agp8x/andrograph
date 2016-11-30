@@ -4,7 +4,11 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 /**
- * Created by clemensk on 30.11.16.
+ * fast choices of default styling
+ *
+ * @author clemensk
+ *         <p>
+ *         30.11.16.
  */
 public class DefaultEdgePaintProvider<E> implements EdgePaintProvider<E> {
     Paint fallback;
@@ -12,10 +16,11 @@ public class DefaultEdgePaintProvider<E> implements EdgePaintProvider<E> {
     public DefaultEdgePaintProvider() {
         fallback = new Paint();
         fallback.setColor(Color.BLACK);
+        fallback.setAntiAlias(true);
     }
 
     @Override
-    public Paint get(Object edge) {
+    public Paint getEdgePaint(Object edge) {
         return fallback;
     }
 }

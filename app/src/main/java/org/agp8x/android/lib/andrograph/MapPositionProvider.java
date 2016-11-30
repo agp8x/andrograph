@@ -3,7 +3,11 @@ package org.agp8x.android.lib.andrograph;
 import java.util.Map;
 
 /**
- * Created by clemensk on 30.11.16.
+ * Store {@link Coordinate}s for Vertices in a Map. Might be inefficient
+ *
+ * @author clemensk
+ *         <p>
+ *         30.11.16.
  */
 
 public class MapPositionProvider<V> implements PositionProvider<V> {
@@ -17,8 +21,8 @@ public class MapPositionProvider<V> implements PositionProvider<V> {
 
     @Override
     public Coordinate getPosition(V vertex) {
-        if (! positionMap.containsKey(vertex)) {
-            System.out.println("not in map "+fallback);
+        if (!positionMap.containsKey(vertex)) {
+            System.out.println("not in map " + fallback);
             positionMap.put(vertex, fallback);
         }
         return positionMap.get(vertex);
@@ -26,11 +30,11 @@ public class MapPositionProvider<V> implements PositionProvider<V> {
 
     @Override
     public void update(Coordinate old, Coordinate updated) {
-        if (positionMap.containsValue(old)){
-            V key =null;
-            for (Map.Entry<V, Coordinate> entry: positionMap.entrySet()){
-                if (entry.getValue().equals(old)){
-                    key=entry.getKey();
+        if (positionMap.containsValue(old)) {
+            V key = null;
+            for (Map.Entry<V, Coordinate> entry : positionMap.entrySet()) {
+                if (entry.getValue().equals(old)) {
+                    key = entry.getKey();
                 }
             }
             if (key != null) {
@@ -41,11 +45,16 @@ public class MapPositionProvider<V> implements PositionProvider<V> {
 
     @Override
     public V getSelected(Coordinate action) {
-        for (Map.Entry<V, Coordinate> entry: positionMap.entrySet()){
-            if (action.intersects(entry.getValue())){
+        for (Map.Entry<V, Coordinate> entry : positionMap.entrySet()) {
+            if (action.intersects(entry.getValue())) {
                 return entry.getKey();
             }
         }
         return null;
+    }
+
+    @Override
+    public void setPosition(V vertex, Coordinate position) {
+        positionMap.put(vertex, position);
     }
 }

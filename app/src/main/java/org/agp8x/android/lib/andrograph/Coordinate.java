@@ -1,7 +1,11 @@
 package org.agp8x.android.lib.andrograph;
 
 /**
- * Created by clemensk on 30.11.16.
+ * {@link Coordinate}s store a position in relative order (0-1.0)
+ *
+ * @author  clemensk
+ *
+ * 30.11.16.
  */
 
 public class Coordinate {
@@ -39,7 +43,7 @@ public class Coordinate {
             return true;
         }
         double distance = Math.sqrt(Math.pow(other.getX() - x, 2) + Math.pow(other.getY() - y, 2));
-        return distance < 0.1;//TODO: validate; MAGIC NUMBER ALERT!
+        return distance < 0.15;//TODO: validate; MAGIC NUMBER ALERT!
     }
 
     @Override
