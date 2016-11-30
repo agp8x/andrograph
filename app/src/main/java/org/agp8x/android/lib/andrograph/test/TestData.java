@@ -1,0 +1,46 @@
+package org.agp8x.android.lib.andrograph.test;
+
+import android.support.annotation.NonNull;
+
+import org.jgrapht.Graph;
+import org.jgrapht.ext.DOTExporter;
+import org.jgrapht.ext.VertexNameProvider;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.SimpleGraph;
+
+import java.io.StringWriter;
+
+/**
+ * Created by clemensk on 30.11.16.
+ */
+
+public class TestData {
+
+    @NonNull
+    public static SimpleGraph<String, DefaultEdge> getStringDefaultEdgeSimpleGraph() {
+        SimpleGraph<String, DefaultEdge> g = new SimpleGraph<>(DefaultEdge.class);
+        String v1 = "a";
+        String v2 = "b";
+        String v3 = "c";
+        g.addVertex(v1);
+        g.addVertex(v2);
+        g.addVertex(v3);
+        g.addEdge(v1, v2);
+        g.addEdge(v2, v3);
+        g.addEdge(v1, v3);
+        return g;
+    }
+
+    public static String graphToDot(Graph<String, DefaultEdge> graph) {
+        VertexNameProvider<String> idProvider = new VertexNameProvider<String>() {
+            @Override
+            public String getVertexName(String vertex) {
+                return vertex;
+            }
+        };
+        DOTExporter<String, DefaultEdge> dote = new DOTExporter<>(idProvider, null, null);
+        StringWriter stringWriter = new StringWriter();
+        dote.export(stringWriter, graph);
+        return stringWriter.toString();
+    }
+}
