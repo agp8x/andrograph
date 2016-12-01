@@ -20,7 +20,7 @@ public class DefaultEdgePaintProvider<E> implements EdgePaintProvider<E> {
     }
 
     @Override
-    public Paint getEdgePaint(Object edge) {
+    public Paint getEdgePaint(E edge) {
         return fallback;
     }
 }
