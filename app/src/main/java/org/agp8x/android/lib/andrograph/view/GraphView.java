@@ -159,11 +159,15 @@ public class GraphView<V, E extends DefaultEdge> extends View {
                         if (controller.getGraph().containsEdge(dragging.object, obj)) {
                             controller.getGraph().removeEdge(dragging.object, obj);
                         } else {
-                            controller.getGraph().addEdge(dragging.object, obj);
+                            try {
+                                controller.getGraph().addEdge(dragging.object, obj);
+                            } catch (IllegalArgumentException e) {
+                                System.err.println(e.getMessage());
+                            }
                         }
                         dragging.object = null;
                     }
-                    
+
                     update = true;
                     break;
                 case MotionEvent.ACTION_MOVE:

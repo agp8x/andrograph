@@ -22,10 +22,14 @@ import org.agp8x.android.lib.andrograph.view.GraphView;
 import org.jgrapht.VertexFactory;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
-/** @author  clemensk
-        *
-        * 30.11.16.
-        */
+
+/**
+ * sample activity to work with graphs
+ *
+ * @author clemensk
+ *         <p>
+ *         30.11.16.
+ */
 public class Andrograph extends AppCompatActivity {
 
     private SimpleGraph<String, DefaultEdge> graph;
