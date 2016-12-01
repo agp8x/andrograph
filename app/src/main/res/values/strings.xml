@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Andrograph</string>
+    <string name="switch1">insert/move||edit</string>
 </resources>

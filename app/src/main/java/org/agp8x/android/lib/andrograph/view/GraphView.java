@@ -12,6 +12,7 @@ import org.agp8x.android.lib.andrograph.Coordinate;
 import org.agp8x.android.lib.andrograph.GraphViewController;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
+
 /* * @author  clemensk
  *
  * 30.11.16.
@@ -21,6 +22,16 @@ public class GraphView<V, E extends DefaultEdge> extends View {
     private Dragging dragging;
     private int contentWidth;
     private int contentHeight;
+    private boolean insertionMode = true;
+
+    public void setInsertionMode(boolean insertionMode) {
+        this.insertionMode = insertionMode;
+        System.out.println(insertionMode);
+    }
+
+    public boolean isInsertionMode() {
+        return insertionMode;
+    }
 
     public GraphView(Context context) {
         super(context);
@@ -44,51 +55,7 @@ public class GraphView<V, E extends DefaultEdge> extends View {
 
     private void init(AttributeSet attrs, int defStyle) {
         dragging = new Dragging();
-        setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                boolean update = false;
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        if (dragging.object == null) {
-                            Coordinate action = event2coordinate(motionEvent);
-                            V obj = controller.getSelected(action);
-                            System.out.println("find new object@" + action);
-                            if (obj != null) {
-                                System.out.println("found new obj: " + obj);
-                                dragging.object = obj;
-                                dragging.old = controller.getPosition(obj);
-                                dragging.xy = event2pair(motionEvent);
-                            } else {
-                                System.out.println("create new obj");
-                                V vertex = controller.addVertex();
-                                controller.setPosition(vertex, event2coordinate(motionEvent));
-                            }
-                            update = true;
-                        }
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        if (dragging.object != null) {
-                            dragging.xy = event2pair(motionEvent);
-                            update = true;
-                        }
-                        break;
-                    case MotionEvent.ACTION_UP:
-                    case MotionEvent.ACTION_CANCEL:
-                        if (dragging.object != null) {
-                            dragging.xy = event2pair(motionEvent);
-                            controller.update(dragging.old, pair2coordinate(dragging.xy));
-                            dragging.object = null;
-                            update = true;
-                        }
-                        break;
-                }
-                if (update) {
-                    invalidate();
-                }
-                return true;
-            }
-        });
+        setOnTouchListener(new GraphOnTouchListener());
     }
 
     @Override
@@ -133,26 +100,26 @@ public class GraphView<V, E extends DefaultEdge> extends View {
         }
     }
 
-    private Pair<Float, Float> vertex2view(V vertex) {
+    protected Pair<Float, Float> vertex2view(V vertex) {
         if (vertex.equals(dragging.object)) {
             return dragging.xy;
         }
         return coordinate2view(controller.getPosition(vertex));
     }
 
-    private Pair<Float, Float> coordinate2view(Coordinate coordinate) {
+    protected Pair<Float, Float> coordinate2view(Coordinate coordinate) {
         return new Pair<>((float) (coordinate.getX() * contentWidth), (float) (coordinate.getY() * contentHeight));
     }
 
-    private Pair<Float, Float> event2pair(MotionEvent event) {
+    protected Pair<Float, Float> event2pair(MotionEvent event) {
         return new Pair<>(event.getX(), event.getY());
     }
 
-    private Coordinate pair2coordinate(Pair<Float, Float> xy) {
+    protected Coordinate pair2coordinate(Pair<Float, Float> xy) {
         return new Coordinate(xy.first / contentWidth, xy.second / contentHeight);
     }
 
-    private Coordinate event2coordinate(MotionEvent event) {
+    protected Coordinate event2coordinate(MotionEvent event) {
         return new Coordinate(event.getX() / contentWidth, event.getY() / contentHeight);
     }
 
@@ -161,4 +128,70 @@ public class GraphView<V, E extends DefaultEdge> extends View {
         Coordinate old;
         Pair<Float, Float> xy;
     }
+
+
+    private class GraphOnTouchListener implements OnTouchListener {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            boolean update = false;
+            switch (motionEvent.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    Coordinate action = event2coordinate(motionEvent);
+                    System.out.println("find new object@" + action);
+                    if (dragging.object == null) {
+                        V obj = controller.getSelected(action);
+                        if (obj != null) {
+                            System.out.println("found new obj: " + obj);
+                            dragging.object = obj;
+                            dragging.old = controller.getPosition(obj);
+                            dragging.xy = coordinate2view(dragging.old);
+                        } else if (insertionMode) {
+                            System.out.println("create new obj");
+                            V vertex = controller.addVertex();
+                            controller.setPosition(vertex, event2coordinate(motionEvent));
+                        }
+                    } else if (!insertionMode) {
+                        V obj = controller.getSelected(action);
+                        if (obj == null) {
+                            break;
+                        }
+                        System.out.println("found 2nd obj: " + obj);
+                        if (controller.getGraph().containsEdge(dragging.object, obj)) {
+                            controller.getGraph().removeEdge(dragging.object, obj);
+                        } else {
+                            controller.getGraph().addEdge(dragging.object, obj);
+                        }
+                        dragging.object = null;
+                    }
+                    
+                    update = true;
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    if (insertionMode) {
+                        if (dragging.object != null) {
+                            dragging.xy = event2pair(motionEvent);
+                            update = true;
+                        }
+                    }
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    if (insertionMode) {
+                        if (dragging.object != null) {
+                            dragging.xy = event2pair(motionEvent);
+                            controller.update(dragging.old, pair2coordinate(dragging.xy));
+                            dragging.object = null;
+                            update = true;
+                        }
+                    }
+                    break;
+            }
+            if (update) {
+                invalidate();
+            }
+            return true;
+        }
+    }
+
 }
+

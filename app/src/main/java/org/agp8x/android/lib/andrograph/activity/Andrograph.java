@@ -3,6 +3,8 @@ package org.agp8x.android.lib.andrograph.activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import org.agp8x.android.lib.andrograph.Coordinate;
@@ -28,6 +30,7 @@ public class Andrograph extends AppCompatActivity {
 
     private SimpleGraph<String, DefaultEdge> graph;
     private TextView tv;
+    private GraphView<String, DefaultEdge> gv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +39,7 @@ public class Andrograph extends AppCompatActivity {
         tv = (TextView) findViewById(R.id.textview);
         graph = TestData.getStringDefaultEdgeSimpleGraph();
         tv.setText(TestData.graphToDot(graph));
-        GraphView<String, DefaultEdge> gv = (GraphView<String, DefaultEdge>) findViewById(R.id.graphview);
+        gv = (GraphView<String, DefaultEdge>) findViewById(R.id.graphview);
         PositionProvider<String> positionProvider = new MapPositionProvider<>(TestData.getStringDefaultEdgeSimpleGraphPositions(), new Coordinate(0.5, 0.8));
         EdgePaintProvider<DefaultEdge> epp = new DefaultEdgePaintProvider<>();
         VertexPaintProvider<String> vpp = new DefaultVertexPaintProvider<>();
@@ -44,6 +47,15 @@ public class Andrograph extends AppCompatActivity {
         GraphViewController<String, DefaultEdge> gvc = new GraphViewController<>(graph, positionProvider, epp, vpp, vf);
 
         gv.setController(gvc);
+
+        final Switch creationSwitch = (Switch) findViewById(R.id.switch1);
+        creationSwitch.setChecked(true);
+        creationSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                gv.setInsertionMode(creationSwitch.isChecked());
+            }
+        });
     }
 
     @Override
