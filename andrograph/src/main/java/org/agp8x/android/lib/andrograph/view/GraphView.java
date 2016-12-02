@@ -23,10 +23,11 @@ public class GraphView<V, E extends DefaultEdge> extends View {
     private int contentWidth;
     private int contentHeight;
     private boolean insertionMode = true;
+    private VertexInfo vertexStyle;
+    private EdgeInfo edgeStyle;
 
     public void setInsertionMode(boolean insertionMode) {
         this.insertionMode = insertionMode;
-        System.out.println(insertionMode);
     }
 
     public boolean isInsertionMode() {
@@ -54,7 +55,10 @@ public class GraphView<V, E extends DefaultEdge> extends View {
     }
 
     private void init(AttributeSet attrs, int defStyle) {
+        //Android studio tells me variable creation/allocation during onDraw is bad
         dragging = new Dragging();
+        vertexStyle = new VertexInfo();
+        edgeStyle = new EdgeInfo();
         setOnTouchListener(new GraphOnTouchListener());
     }
 
@@ -75,29 +79,38 @@ public class GraphView<V, E extends DefaultEdge> extends View {
 
         contentWidth = getWidth() - paddingLeft - paddingRight;
         contentHeight = getHeight() - paddingTop - paddingBottom;
-        Coordinate c;
-        Pair<Float, Float> xy;
         Graph<V, E> g = controller.getGraph();
-        Paint vertexPaint;
-        int radius;
         for (V v : g.vertexSet()) {
-            if (v.equals(dragging.object)) {
-                xy = dragging.xy;
-                vertexPaint = controller.getSelectedPaint(v);
-            } else {
-                c = controller.getPosition(v);
-                xy = coordinate2view(c);
-                vertexPaint = controller.getVertexPaint(v);
-            }
-            radius = controller.getRadius(v);
-            canvas.drawCircle(xy.first, xy.second, radius, vertexPaint);
-            for (E edge : g.edgeSet()) {
-                Pair<Float, Float> xy1 = vertex2view(g.getEdgeSource(edge));
-                Pair<Float, Float> xy2 = vertex2view(g.getEdgeTarget(edge));
-                Paint p = controller.getEdgePaint(edge);
-                canvas.drawLine(xy1.first, xy1.second, xy2.first, xy2.second, p);
-            }
+            drawVertex(canvas, v);
         }
+        for (E edge : g.edgeSet()) {
+            drawEdge(canvas, edge, g.getEdgeSource(edge), g.getEdgeTarget(edge));
+        }
+    }
+
+    private void drawVertex(Canvas canvas, V v) {
+        //gather style info
+        if (v.equals(dragging.object)) {
+            vertexStyle.xy = dragging.xy;
+            vertexStyle.paint = controller.getSelectedPaint(v);
+        } else {
+            vertexStyle.xy = coordinate2view(controller.getPosition(v));
+            vertexStyle.paint = controller.getVertexPaint(v);
+        }
+        vertexStyle.xyLabel = coordinate2view(controller.getLabelOffset(v));
+        vertexStyle.label = controller.getLabel(v);
+        //draw
+        canvas.drawCircle(vertexStyle.xy.first, vertexStyle.xy.second, controller.getRadius(v), vertexStyle.paint);
+        if (vertexStyle.label != null) {
+            canvas.drawText(vertexStyle.label, vertexStyle.xy.first + vertexStyle.xyLabel.first, vertexStyle.xy.second + vertexStyle.xyLabel.second, controller.getLabelPaint(v));
+        }
+    }
+
+    private void drawEdge(Canvas canvas, E edge, V edgeSource, V edgeTarget) {
+        edgeStyle.xy1 = vertex2view(edgeSource);
+        edgeStyle.xy2 = vertex2view(edgeTarget);
+        //draw
+        canvas.drawLine(edgeStyle.xy1.first, edgeStyle.xy1.second, edgeStyle.xy2.first, edgeStyle.xy2.second, controller.getEdgePaint(edge));
     }
 
     protected Pair<Float, Float> vertex2view(V vertex) {
@@ -127,6 +140,18 @@ public class GraphView<V, E extends DefaultEdge> extends View {
         V object;
         Coordinate old;
         Pair<Float, Float> xy;
+    }
+
+    private class VertexInfo {
+        Pair<Float, Float> xy;
+        Paint paint;
+        Pair<Float, Float> xyLabel;
+        String label;
+    }
+
+    private class EdgeInfo {
+        Pair<Float, Float> xy1;
+        Pair<Float, Float> xy2;
     }
 
 

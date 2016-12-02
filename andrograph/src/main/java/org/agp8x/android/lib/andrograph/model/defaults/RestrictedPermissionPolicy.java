@@ -26,7 +26,7 @@ public class RestrictedPermissionPolicy<V,E extends DefaultEdge> implements Perm
 
     @Override
     public boolean allowMotion(V vertex, Coordinate coordinate) {
-        return false;
+        return allowMotion();
     }
 
     @Override

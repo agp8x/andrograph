@@ -3,6 +3,7 @@ package org.agp8x.android.lib.andrograph.model.defaults;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+import org.agp8x.android.lib.andrograph.model.Coordinate;
 import org.agp8x.android.lib.andrograph.model.VertexPaintProvider;
 
 /**
@@ -13,8 +14,10 @@ import org.agp8x.android.lib.andrograph.model.VertexPaintProvider;
  *         30.11.16.
  */
 public class DefaultVertexPaintProvider<V> implements VertexPaintProvider<V> {
-    Paint fallback;
-    Paint selected;
+    private Paint fallback;
+   private  Paint selected;
+    private Paint labelPaint;
+    private Coordinate offset;
 
     public DefaultVertexPaintProvider() {
         fallback = new Paint();
@@ -24,6 +27,14 @@ public class DefaultVertexPaintProvider<V> implements VertexPaintProvider<V> {
 
         selected = new Paint(fallback);
         selected.setColor(Color.GREEN);
+
+        labelPaint = new Paint();
+        labelPaint.setColor(Color.YELLOW);
+        labelPaint.setAntiAlias(true);
+        labelPaint.setTextSize(25);
+        labelPaint.setStrokeWidth(2);
+
+        offset = new Coordinate(-0.01,0.01);
     }
 
     @Override
@@ -39,5 +50,20 @@ public class DefaultVertexPaintProvider<V> implements VertexPaintProvider<V> {
     @Override
     public int getRadius(V vertex) {
         return 25;
+    }
+
+    @Override
+    public String getLabel(V vertex) {
+        return String.valueOf(vertex);
+    }
+
+    @Override
+    public Paint getLabelPaint(V vertex) {
+        return labelPaint;
+    }
+
+    @Override
+    public Coordinate getLabelOffset(V vertex) {
+        return offset;
     }
 }

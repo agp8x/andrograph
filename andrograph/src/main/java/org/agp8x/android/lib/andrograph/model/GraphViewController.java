@@ -116,20 +116,39 @@ public class GraphViewController<V, E extends DefaultEdge> implements PositionPr
         return graph;
     }
 
+    @Override
     public Paint getEdgePaint(E edge) {
         return edgePaintProvider.getEdgePaint(edge);
     }
 
+    @Override
     public Paint getVertexPaint(V vertex) {
         return vertexPaintProvider.getVertexPaint(vertex);
     }
 
+    @Override
     public Paint getSelectedPaint(V vertex) {
         return vertexPaintProvider.getSelectedPaint(vertex);
     }
 
+    @Override
     public int getRadius(V vertex) {
         return vertexPaintProvider.getRadius(vertex);
+    }
+
+    @Override
+    public String getLabel(V vertex) {
+        return vertexPaintProvider.getLabel(vertex);
+    }
+
+    @Override
+    public Paint getLabelPaint(V vertex) {
+        return vertexPaintProvider.getLabelPaint(vertex);
+    }
+
+    @Override
+    public Coordinate getLabelOffset(V vertex) {
+        return vertexPaintProvider.getLabelOffset(vertex);
     }
 
     public boolean addVertex(Coordinate coordinate) {

@@ -13,5 +13,11 @@ public interface VertexPaintProvider<V> {
     Paint getSelectedPaint(V vertex);
 
     int getRadius(V vertex);
+
+    String getLabel(V vertex);
+
+    Paint getLabelPaint(V vertex);
+
+    Coordinate getLabelOffset(V vertex);
 }
 
