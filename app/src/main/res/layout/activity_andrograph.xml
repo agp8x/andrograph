@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="org.agp8x.android.lib.andrograph.activity.Andrograph">
+    tools:context="org.agp8x.android.andrograph.Andrograph">
 
     <TextView
         android:id="@+id/textview"

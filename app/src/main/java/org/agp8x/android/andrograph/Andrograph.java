@@ -1,7 +1,7 @@
-package org.agp8x.android.lib.andrograph.activity;
+package org.agp8x.android.andrograph;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Switch;
@@ -9,13 +9,12 @@ import android.widget.TextView;
 
 import org.agp8x.android.lib.andrograph.Coordinate;
 import org.agp8x.android.lib.andrograph.DefaultEdgePaintProvider;
-import org.agp8x.android.lib.andrograph.StringVertexFactory;
 import org.agp8x.android.lib.andrograph.DefaultVertexPaintProvider;
 import org.agp8x.android.lib.andrograph.EdgePaintProvider;
 import org.agp8x.android.lib.andrograph.GraphViewController;
 import org.agp8x.android.lib.andrograph.MapPositionProvider;
 import org.agp8x.android.lib.andrograph.PositionProvider;
-import org.agp8x.android.lib.andrograph.R;
+import org.agp8x.android.lib.andrograph.StringVertexFactory;
 import org.agp8x.android.lib.andrograph.VertexPaintProvider;
 import org.agp8x.android.lib.andrograph.test.TestData;
 import org.agp8x.android.lib.andrograph.view.GraphView;
