@@ -1,5 +1,6 @@
 package org.agp8x.android.lib.andrograph;
 
+import org.agp8x.android.lib.andrograph.model.Coordinate;
 import org.junit.Test;
 
 /**

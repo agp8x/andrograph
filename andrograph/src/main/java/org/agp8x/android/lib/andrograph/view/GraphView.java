@@ -8,8 +8,8 @@ import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
 
-import org.agp8x.android.lib.andrograph.Coordinate;
-import org.agp8x.android.lib.andrograph.GraphViewController;
+import org.agp8x.android.lib.andrograph.model.Coordinate;
+import org.agp8x.android.lib.andrograph.model.GraphViewController;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 
@@ -136,64 +136,92 @@ public class GraphView<V, E extends DefaultEdge> extends View {
             boolean update = false;
             switch (motionEvent.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    Coordinate action = event2coordinate(motionEvent);
-                    System.out.println("find new object@" + action);
-                    if (dragging.object == null) {
-                        V obj = controller.getSelected(action);
-                        if (obj != null) {
-                            System.out.println("found new obj: " + obj);
-                            dragging.object = obj;
-                            dragging.old = controller.getPosition(obj);
-                            dragging.xy = coordinate2view(dragging.old);
-                        } else if (insertionMode) {
-                            System.out.println("create new obj");
-                            V vertex = controller.addVertex();
-                            controller.setPosition(vertex, event2coordinate(motionEvent));
-                        }
-                    } else if (!insertionMode) {
-                        V obj = controller.getSelected(action);
-                        if (obj == null) {
-                            break;
-                        }
-                        System.out.println("found 2nd obj: " + obj);
-                        if (controller.getGraph().containsEdge(dragging.object, obj)) {
-                            controller.getGraph().removeEdge(dragging.object, obj);
-                        } else {
-                            try {
-                                controller.getGraph().addEdge(dragging.object, obj);
-                            } catch (IllegalArgumentException e) {
-                                System.err.println(e.getMessage());
-                            }
-                        }
-                        dragging.object = null;
-                    }
-
-                    update = true;
+                    update = handleStart(motionEvent);
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    if (insertionMode) {
-                        if (dragging.object != null) {
-                            dragging.xy = event2pair(motionEvent);
-                            update = true;
-                        }
-                    }
+                    update = handleMove(motionEvent);
                     break;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
-                    if (insertionMode) {
-                        if (dragging.object != null) {
-                            dragging.xy = event2pair(motionEvent);
-                            controller.update(dragging.old, pair2coordinate(dragging.xy));
-                            dragging.object = null;
-                            update = true;
-                        }
-                    }
+                    update = handleStop(motionEvent);
                     break;
             }
             if (update) {
                 invalidate();
             }
             return true;
+        }
+
+        private boolean handleStart(MotionEvent motionEvent) {
+            boolean update = false;
+            Coordinate action = event2coordinate(motionEvent);
+            if (dragging.object == null) {
+                V obj = controller.getSelected(action);
+                if (obj != null) {
+                    update = startDragging(obj);
+                } else if (insertionMode) {
+                    update = insertNewVertex(motionEvent);
+                }
+            } else if (!insertionMode) {
+                V obj = controller.getSelected(action);
+                if (obj != null) {
+                    update = insertEdge(obj);
+                }
+            }
+            return update;
+        }
+
+        private boolean handleMove(MotionEvent motionEvent) {
+            boolean update = false;
+            if (insertionMode) {
+                update = updateDraggedVertex(motionEvent);
+            }
+            return update;
+        }
+
+        private boolean handleStop(MotionEvent motionEvent) {
+            boolean update = false;
+            if (insertionMode) {
+                update = stopDragging(motionEvent);
+            }
+            return update;
+        }
+
+        private boolean stopDragging(MotionEvent motionEvent) {
+            boolean update = false;
+            if (dragging.object != null) {
+                dragging.xy = event2pair(motionEvent);
+                controller.update(dragging.old, pair2coordinate(dragging.xy));
+                dragging.object = null;
+                update = true;
+            }
+            return update;
+        }
+
+        private boolean updateDraggedVertex(MotionEvent motionEvent) {
+            boolean update = false;
+            if (dragging.object != null) {
+                dragging.xy = event2pair(motionEvent);
+                update = true;
+            }
+            return update;
+        }
+
+        private boolean insertEdge(V obj) {
+            boolean update = controller.addOrRemoveEdge(dragging.object, obj);
+            dragging.object = null;
+            return update;
+        }
+
+        private boolean startDragging(V obj) {
+            dragging.object = obj;
+            dragging.old = controller.getPosition(obj);
+            dragging.xy = coordinate2view(dragging.old);
+            return true;
+        }
+
+        private boolean insertNewVertex(MotionEvent motionEvent) {
+            return controller.addVertex(event2coordinate(motionEvent));
         }
     }
 

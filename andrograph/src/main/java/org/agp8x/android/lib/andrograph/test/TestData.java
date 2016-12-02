@@ -2,7 +2,7 @@ package org.agp8x.android.lib.andrograph.test;
 
 import android.support.annotation.NonNull;
 
-import org.agp8x.android.lib.andrograph.Coordinate;
+import org.agp8x.android.lib.andrograph.model.Coordinate;
 import org.jgrapht.Graph;
 import org.jgrapht.ext.DOTExporter;
 import org.jgrapht.ext.VertexNameProvider;

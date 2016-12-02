@@ -1,4 +1,4 @@
-package org.agp8x.android.lib.andrograph;
+package org.agp8x.android.lib.andrograph.model.defaults;
 
 import org.jgrapht.VertexFactory;
 

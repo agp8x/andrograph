@@ -1,7 +1,9 @@
-package org.agp8x.android.lib.andrograph;
+package org.agp8x.android.lib.andrograph.model.defaults;
 
 import android.graphics.Color;
 import android.graphics.Paint;
+
+import org.agp8x.android.lib.andrograph.model.VertexPaintProvider;
 
 /**
  * fast choices of default styling

@@ -1,4 +1,7 @@
-package org.agp8x.android.lib.andrograph;
+package org.agp8x.android.lib.andrograph.model.defaults;
+
+import org.agp8x.android.lib.andrograph.model.Coordinate;
+import org.agp8x.android.lib.andrograph.model.PositionProvider;
 
 import java.util.Map;
 
@@ -29,7 +32,7 @@ public class MapPositionProvider<V> implements PositionProvider<V> {
     }
 
     @Override
-    public void update(Coordinate old, Coordinate updated) {
+    public boolean update(Coordinate old, Coordinate updated) {
         if (positionMap.containsValue(old)) {
             V key = null;
             for (Map.Entry<V, Coordinate> entry : positionMap.entrySet()) {
@@ -40,7 +43,9 @@ public class MapPositionProvider<V> implements PositionProvider<V> {
             if (key != null) {
                 positionMap.put(key, updated);
             }
+            return true;
         }
+        return false;
     }
 
     @Override
@@ -54,7 +59,8 @@ public class MapPositionProvider<V> implements PositionProvider<V> {
     }
 
     @Override
-    public void setPosition(V vertex, Coordinate position) {
+    public boolean setPosition(V vertex, Coordinate position) {
         positionMap.put(vertex, position);
+        return true;
     }
 }

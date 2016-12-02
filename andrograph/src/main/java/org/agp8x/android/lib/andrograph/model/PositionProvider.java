@@ -1,4 +1,4 @@
-package org.agp8x.android.lib.andrograph;
+package org.agp8x.android.lib.andrograph.model;
 
 /**
  * Provide and store relative positions of vertices
@@ -10,9 +10,9 @@ package org.agp8x.android.lib.andrograph;
 public interface PositionProvider<V> {
     Coordinate getPosition(V vertex);
 
-    void update(Coordinate old, Coordinate updated);
+    boolean update(Coordinate old, Coordinate updated);
 
     V getSelected(Coordinate action);
 
-    void setPosition(V vertex, Coordinate position);
+    boolean setPosition(V vertex, Coordinate position);
 }
