@@ -100,9 +100,17 @@ public class GraphView<V, E extends DefaultEdge> extends View {
         vertexStyle.xyLabel = coordinate2view(controller.getLabelOffset(v));
         vertexStyle.label = controller.getLabel(v);
         //draw
-        canvas.drawCircle(vertexStyle.xy.first, vertexStyle.xy.second, controller.getRadius(v), vertexStyle.paint);
+        canvas.drawCircle(
+                vertexStyle.xy.first,
+                vertexStyle.xy.second,
+                controller.getRadius(v),
+                vertexStyle.paint);
         if (vertexStyle.label != null) {
-            canvas.drawText(vertexStyle.label, vertexStyle.xy.first + vertexStyle.xyLabel.first, vertexStyle.xy.second + vertexStyle.xyLabel.second, controller.getLabelPaint(v));
+            canvas.drawText(
+                    vertexStyle.label,
+                    vertexStyle.xy.first + vertexStyle.xyLabel.first,
+                    vertexStyle.xy.second + vertexStyle.xyLabel.second,
+                    controller.getLabelPaint(v));
         }
     }
 
@@ -110,7 +118,12 @@ public class GraphView<V, E extends DefaultEdge> extends View {
         edgeStyle.xy1 = vertex2view(edgeSource);
         edgeStyle.xy2 = vertex2view(edgeTarget);
         //draw
-        canvas.drawLine(edgeStyle.xy1.first, edgeStyle.xy1.second, edgeStyle.xy2.first, edgeStyle.xy2.second, controller.getEdgePaint(edge));
+        canvas.drawLine(
+                edgeStyle.xy1.first,
+                edgeStyle.xy1.second,
+                edgeStyle.xy2.first,
+                edgeStyle.xy2.second,
+                controller.getEdgePaint(edge));
     }
 
     protected Pair<Float, Float> vertex2view(V vertex) {
@@ -121,7 +134,9 @@ public class GraphView<V, E extends DefaultEdge> extends View {
     }
 
     protected Pair<Float, Float> coordinate2view(Coordinate coordinate) {
-        return new Pair<>((float) (coordinate.getX() * contentWidth), (float) (coordinate.getY() * contentHeight));
+        return new Pair<>(
+                (float) (coordinate.getX() * contentWidth),
+                (float) (coordinate.getY() * contentHeight));
     }
 
     protected Pair<Float, Float> event2pair(MotionEvent event) {
@@ -239,10 +254,13 @@ public class GraphView<V, E extends DefaultEdge> extends View {
         }
 
         private boolean startDragging(V obj) {
-            dragging.object = obj;
-            dragging.old = controller.getPosition(obj);
-            dragging.xy = coordinate2view(dragging.old);
-            return true;
+            if (controller.allowMotion()) {
+                dragging.object = obj;
+                dragging.old = controller.getPosition(obj);
+                dragging.xy = coordinate2view(dragging.old);
+                return true;
+            }
+            return false;
         }
 
         private boolean insertNewVertex(MotionEvent motionEvent) {

@@ -5,10 +5,14 @@ import org.agp8x.android.lib.andrograph.model.PermissionPolicy;
 import org.jgrapht.graph.DefaultEdge;
 
 /**
- * Created by clemensk on 02.12.16.
+ * Rather restrictive permission set (allows just viewing, no editing)
+ *
+ * @author clemensk
+ *         <p>
+ *         on 02.12.16.
  */
 
-public class RestrictedPermissionPolicy<V,E extends DefaultEdge> implements PermissionPolicy<V,E> {
+public class RestrictedPermissionPolicy<V, E extends DefaultEdge> implements PermissionPolicy<V, E> {
     @Override
     public boolean allowVertexInsertion() {
         return false;

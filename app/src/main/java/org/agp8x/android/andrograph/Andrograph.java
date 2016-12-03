@@ -8,17 +8,18 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import org.agp8x.android.lib.andrograph.model.Coordinate;
-import org.agp8x.android.lib.andrograph.model.PermissionPolicy;
-import org.agp8x.android.lib.andrograph.model.defaults.DefaultEdgePaintProvider;
-import org.agp8x.android.lib.andrograph.model.defaults.DefaultPermissionPolicy;
-import org.agp8x.android.lib.andrograph.model.defaults.DefaultVertexPaintProvider;
 import org.agp8x.android.lib.andrograph.model.EdgePaintProvider;
 import org.agp8x.android.lib.andrograph.model.GraphViewController;
-import org.agp8x.android.lib.andrograph.model.defaults.MapPositionProvider;
+import org.agp8x.android.lib.andrograph.model.PermissionPolicy;
 import org.agp8x.android.lib.andrograph.model.PositionProvider;
+import org.agp8x.android.lib.andrograph.model.VertexPaintProvider;
+import org.agp8x.android.lib.andrograph.model.defaults.DefaultEdgePaintProvider;
+import org.agp8x.android.lib.andrograph.model.defaults.DefaultGraphViewController;
+import org.agp8x.android.lib.andrograph.model.defaults.DefaultPermissionPolicy;
+import org.agp8x.android.lib.andrograph.model.defaults.DefaultVertexPaintProvider;
+import org.agp8x.android.lib.andrograph.model.defaults.MapPositionProvider;
 import org.agp8x.android.lib.andrograph.model.defaults.RestrictedPermissionPolicy;
 import org.agp8x.android.lib.andrograph.model.defaults.StringVertexFactory;
-import org.agp8x.android.lib.andrograph.model.VertexPaintProvider;
 import org.agp8x.android.lib.andrograph.test.TestData;
 import org.agp8x.android.lib.andrograph.view.GraphView;
 import org.jgrapht.VertexFactory;
@@ -52,7 +53,7 @@ public class Andrograph extends AppCompatActivity {
         VertexFactory<String> vf = new StringVertexFactory<>();
         PermissionPolicy<String, DefaultEdge> pp = new DefaultPermissionPolicy<>();
         //pp=new RestrictedPermissionPolicy<>();
-        GraphViewController<String, DefaultEdge> gvc = new GraphViewController<>(graph, positionProvider, epp, vpp, vf, pp);
+        GraphViewController<String, DefaultEdge> gvc = new DefaultGraphViewController<>(graph, positionProvider, epp, vpp, vf, pp);
 
         gv.setController(gvc);
 

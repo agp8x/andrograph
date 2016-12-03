@@ -1,7 +1,7 @@
 package org.agp8x.android.lib.andrograph.model;
 
 /**
- * {@link Coordinate}s store a position in relative order (0-1.0)
+ * {@link Coordinate}s store a position in relative fashion (0-1.0)
  *
  * @author  clemensk
  *
