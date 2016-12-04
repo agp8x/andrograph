@@ -25,6 +25,7 @@ public class GraphView<V, E extends DefaultEdge> extends View {
     private boolean insertionMode = true;
     private VertexInfo vertexStyle;
     private EdgeInfo edgeStyle;
+    private DeletionZone deletionZone;
 
     public void setInsertionMode(boolean insertionMode) {
         this.insertionMode = insertionMode;
@@ -59,7 +60,18 @@ public class GraphView<V, E extends DefaultEdge> extends View {
         dragging = new Dragging();
         vertexStyle = new VertexInfo();
         edgeStyle = new EdgeInfo();
+
         setOnTouchListener(new GraphOnTouchListener());
+
+        //TODO: setup DeletionZone from attrs
+        if (true) {
+            deletionZone = null;
+        } else {
+            deletionZone = new DeletionZone();
+            deletionZone.buttomRight = coordinate2view(new Coordinate(0, 0));
+            deletionZone.topLeft = deletionZone.buttomRight;
+
+        }
     }
 
     @Override
@@ -169,6 +181,16 @@ public class GraphView<V, E extends DefaultEdge> extends View {
         Pair<Float, Float> xy2;
     }
 
+    private class DeletionZone {
+        Pair<Float, Float> topLeft;
+        Pair<Float, Float> buttomRight;
+
+        boolean contains(Pair<Float, Float> other) {
+            return topLeft.first < other.first && buttomRight.first > other.first &&
+                    topLeft.second < other.second && buttomRight.second > other.second;
+        }
+    }
+
 
     private class GraphOnTouchListener implements OnTouchListener {
         @Override
@@ -231,9 +253,13 @@ public class GraphView<V, E extends DefaultEdge> extends View {
             boolean update = false;
             if (dragging.object != null) {
                 dragging.xy = event2pair(motionEvent);
-                controller.update(dragging.old, pair2coordinate(dragging.xy));
-                dragging.object = null;
-                update = true;
+                if (deletionZone != null && deletionZone.contains(dragging.xy)) {
+                    update = controller.removeVertex(dragging.object);
+                } else {
+                    controller.update(dragging.old, pair2coordinate(dragging.xy));
+                    dragging.object = null;
+                    update = true;
+                }
             }
             return update;
         }

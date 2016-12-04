@@ -190,10 +190,7 @@ public class DefaultGraphViewController<V, E extends DefaultEdge> implements Gra
     }
 
     private boolean removeEdge(V source, V target) {
-        if (allowEdgeInsertion(source, target)) {
-            return null != graph.removeEdge(source, target);
-        }
-        return false;
+        return allowEdgeInsertion(source, target) && null != graph.removeEdge(source, target);
     }
 
     @Override
