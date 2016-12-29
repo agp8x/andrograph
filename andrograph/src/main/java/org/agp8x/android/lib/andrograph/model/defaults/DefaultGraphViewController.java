@@ -23,13 +23,14 @@ import java.util.HashMap;
  *         30.11.16.
  */
 
-public class DefaultGraphViewController<V, E extends DefaultEdge> implements GraphViewController<V,E> {
+public class DefaultGraphViewController<V, E extends DefaultEdge> implements GraphViewController<V, E> {
     private final EdgePaintProvider<E> edgePaintProvider;
     private final VertexFactory<V> vertexFactory;
     private final Graph<V, E> graph;
     private final PositionProvider<V> positionProvider;
     private final VertexPaintProvider<V> vertexPaintProvider;
     private final PermissionPolicy<V, E> permissionPolicy;
+    private EdgeEvent<V, E> edgeEventHandler;
 
     /**
      * initialize with all-default providers, factories and an empty graph
@@ -100,6 +101,10 @@ public class DefaultGraphViewController<V, E extends DefaultEdge> implements Gra
         this.vertexPaintProvider = vertexPaintProvider;
         this.vertexFactory = vertexFactory;
         this.permissionPolicy = permissionPolicy;
+    }
+
+    public void setEdgeEventHandler(EdgeEvent handler) {
+        this.edgeEventHandler = handler;
     }
 
     @Override
@@ -179,7 +184,7 @@ public class DefaultGraphViewController<V, E extends DefaultEdge> implements Gra
     }
 
     private boolean addEdge(V source, V target) {
-        if (allowEdgeDeletion(source, target)) {
+        if (allowEdgeInsertion(source, target)) {
             try {
                 return null != graph.addEdge(source, target);
             } catch (IllegalArgumentException e) {
@@ -190,11 +195,16 @@ public class DefaultGraphViewController<V, E extends DefaultEdge> implements Gra
     }
 
     private boolean removeEdge(V source, V target) {
-        return allowEdgeInsertion(source, target) && null != graph.removeEdge(source, target);
+        return allowEdgeDeletion(source, target) && null != graph.removeEdge(source, target);
     }
 
     @Override
     public boolean addOrRemoveEdge(V source, V target) {
+        if (edgeEventHandler != null) {
+           if( edgeEventHandler.edgeSelected(source, target, graph.getEdge(source, target))){
+               return true;
+           }
+        }
         if (graph.containsEdge(source, target)) {
             return removeEdge(source, target);
         } else {

@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 import org.agp8x.android.lib.andrograph.model.EdgePaintProvider;
+import org.jgrapht.graph.DefaultEdge;
 
 /**
  * fast choices of default styling
@@ -12,7 +13,7 @@ import org.agp8x.android.lib.andrograph.model.EdgePaintProvider;
  *         <p>
  *         30.11.16.
  */
-public class DefaultEdgePaintProvider<E> implements EdgePaintProvider<E> {
+public class DefaultEdgePaintProvider<E extends DefaultEdge> implements EdgePaintProvider<E> {
     Paint fallback;
 
     public DefaultEdgePaintProvider() {

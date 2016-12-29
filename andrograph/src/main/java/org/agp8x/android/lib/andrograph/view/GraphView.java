@@ -55,7 +55,7 @@ public class GraphView<V, E extends DefaultEdge> extends View {
         invalidate();
     }
 
-    private void init(AttributeSet attrs, int defStyle) {
+    protected void init(AttributeSet attrs, int defStyle) {
         //Android studio tells me variable creation/allocation during onDraw is bad
         dragging = new Dragging();
         vertexStyle = new VertexInfo();
@@ -100,7 +100,7 @@ public class GraphView<V, E extends DefaultEdge> extends View {
         }
     }
 
-    private void drawVertex(Canvas canvas, V v) {
+    protected void drawVertex(Canvas canvas, V v) {
         //gather style info
         if (v.equals(dragging.object)) {
             vertexStyle.xy = dragging.xy;
@@ -126,7 +126,7 @@ public class GraphView<V, E extends DefaultEdge> extends View {
         }
     }
 
-    private void drawEdge(Canvas canvas, E edge, V edgeSource, V edgeTarget) {
+    protected void drawEdge(Canvas canvas, E edge, V edgeSource, V edgeTarget) {
         edgeStyle.xy1 = vertex2view(edgeSource);
         edgeStyle.xy2 = vertex2view(edgeTarget);
         //draw
@@ -192,7 +192,7 @@ public class GraphView<V, E extends DefaultEdge> extends View {
     }
 
 
-    private class GraphOnTouchListener implements OnTouchListener {
+    protected class GraphOnTouchListener implements OnTouchListener {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
             boolean update = false;
@@ -214,7 +214,7 @@ public class GraphView<V, E extends DefaultEdge> extends View {
             return true;
         }
 
-        private boolean handleStart(MotionEvent motionEvent) {
+        protected boolean handleStart(MotionEvent motionEvent) {
             boolean update = false;
             Coordinate action = event2coordinate(motionEvent);
             if (dragging.object == null) {
@@ -227,13 +227,13 @@ public class GraphView<V, E extends DefaultEdge> extends View {
             } else if (!insertionMode) {
                 V obj = controller.getSelected(action);
                 if (obj != null) {
-                    update = insertEdge(obj);
+                    update = updateEdge(obj);
                 }
             }
             return update;
         }
 
-        private boolean handleMove(MotionEvent motionEvent) {
+        protected boolean handleMove(MotionEvent motionEvent) {
             boolean update = false;
             if (insertionMode) {
                 update = updateDraggedVertex(motionEvent);
@@ -241,7 +241,7 @@ public class GraphView<V, E extends DefaultEdge> extends View {
             return update;
         }
 
-        private boolean handleStop(MotionEvent motionEvent) {
+        protected boolean handleStop(MotionEvent motionEvent) {
             boolean update = false;
             if (insertionMode) {
                 update = stopDragging(motionEvent);
@@ -249,7 +249,7 @@ public class GraphView<V, E extends DefaultEdge> extends View {
             return update;
         }
 
-        private boolean stopDragging(MotionEvent motionEvent) {
+        protected boolean stopDragging(MotionEvent motionEvent) {
             boolean update = false;
             if (dragging.object != null) {
                 dragging.xy = event2pair(motionEvent);
@@ -264,7 +264,7 @@ public class GraphView<V, E extends DefaultEdge> extends View {
             return update;
         }
 
-        private boolean updateDraggedVertex(MotionEvent motionEvent) {
+        protected boolean updateDraggedVertex(MotionEvent motionEvent) {
             boolean update = false;
             if (dragging.object != null) {
                 dragging.xy = event2pair(motionEvent);
@@ -273,13 +273,13 @@ public class GraphView<V, E extends DefaultEdge> extends View {
             return update;
         }
 
-        private boolean insertEdge(V obj) {
+        protected boolean updateEdge(V obj) {
             boolean update = controller.addOrRemoveEdge(dragging.object, obj);
             dragging.object = null;
             return update;
         }
 
-        private boolean startDragging(V obj) {
+        protected boolean startDragging(V obj) {
             if (controller.allowMotion()) {
                 dragging.object = obj;
                 dragging.old = controller.getPosition(obj);
@@ -289,7 +289,7 @@ public class GraphView<V, E extends DefaultEdge> extends View {
             return false;
         }
 
-        private boolean insertNewVertex(MotionEvent motionEvent) {
+        protected boolean insertNewVertex(MotionEvent motionEvent) {
             return controller.addVertex(event2coordinate(motionEvent));
         }
     }
