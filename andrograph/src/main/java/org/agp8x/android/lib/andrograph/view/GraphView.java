@@ -126,7 +126,7 @@ public class GraphView<V, E extends DefaultEdge> extends View {
         }
     }
 
-    private void drawDeletionZone(Canvas canvas) {
+    protected void drawDeletionZone(Canvas canvas) {
         canvas.drawRect(deletionZone.leftTop.first,
                 deletionZone.leftTop.second,
                 deletionZone.rightButtom.first,
