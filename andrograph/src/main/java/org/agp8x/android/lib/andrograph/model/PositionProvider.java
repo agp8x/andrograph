@@ -41,4 +41,10 @@ public interface PositionProvider<V> {
      * @return whether an update has been performed
      */
     boolean setPosition(V vertex, Coordinate position);
+
+    /**
+     * Remove vertex
+     * @param vertex vertex to remove
+     */
+    void remove(V vertex);
 }

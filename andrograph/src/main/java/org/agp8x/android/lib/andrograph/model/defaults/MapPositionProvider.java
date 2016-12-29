@@ -63,4 +63,9 @@ public class MapPositionProvider<V> implements PositionProvider<V> {
         positionMap.put(vertex, position);
         return true;
     }
+
+    @Override
+    public void remove(V vertex) {
+        positionMap.remove(vertex);
+    }
 }

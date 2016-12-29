@@ -1,0 +1,10 @@
+<resources>
+    <declare-styleable name="GraphView">
+        <attr name="buttom" format="float"/>
+        <attr name="right" format="float"/>
+        <attr name="top" format="float"/>
+        <attr name="left" format="float"/>
+        <attr name="color" format="color"/>
+        <attr name="zone_alpha" format="integer"/>
+    </declare-styleable>
+</resources>

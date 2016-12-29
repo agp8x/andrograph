@@ -1,13 +1,16 @@
 package org.agp8x.android.lib.andrograph.view;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
 
+import org.agp8x.android.lib.andrograph.R;
 import org.agp8x.android.lib.andrograph.model.Coordinate;
 import org.agp8x.android.lib.andrograph.model.GraphViewController;
 import org.jgrapht.Graph;
@@ -20,8 +23,8 @@ import org.jgrapht.graph.DefaultEdge;
 public class GraphView<V, E extends DefaultEdge> extends View {
     private GraphViewController<V, E> controller;
     private Dragging dragging;
-    private int contentWidth;
-    private int contentHeight;
+    private int contentWidth = -1;
+    private int contentHeight = -1;
     private boolean insertionMode = true;
     private VertexInfo vertexStyle;
     private EdgeInfo edgeStyle;
@@ -33,6 +36,10 @@ public class GraphView<V, E extends DefaultEdge> extends View {
 
     public boolean isInsertionMode() {
         return insertionMode;
+    }
+
+    public void setDeletionZone(DeletionZone deletionZone) {
+        this.deletionZone = deletionZone;
     }
 
     public GraphView(Context context) {
@@ -63,15 +70,25 @@ public class GraphView<V, E extends DefaultEdge> extends View {
 
         setOnTouchListener(new GraphOnTouchListener());
 
-        //TODO: setup DeletionZone from attrs
-        if (true) {
-            deletionZone = null;
-        } else {
+        final TypedArray attributes = getContext().obtainStyledAttributes(attrs, R.styleable.GraphView, defStyle, 0);
+        if (attributes.hasValue(R.styleable.GraphView_buttom) &&
+                attributes.hasValue(R.styleable.GraphView_right) &&
+                attributes.hasValue(R.styleable.GraphView_top) &&
+                attributes.hasValue(R.styleable.GraphView_left)
+                ) {
             deletionZone = new DeletionZone();
-            deletionZone.buttomRight = coordinate2view(new Coordinate(0, 0));
-            deletionZone.topLeft = deletionZone.buttomRight;
-
+            float x1 = attributes.getFloat(R.styleable.GraphView_right, 0);
+            float y1 = attributes.getFloat(R.styleable.GraphView_buttom, 0);
+            float x2 = attributes.getFloat(R.styleable.GraphView_left, 0);
+            float y2 = attributes.getFloat(R.styleable.GraphView_top, 0);
+            deletionZone.borders = new Pair<>(new Coordinate(x1, y1), new Coordinate(x2, y2));
+            deletionZone.paint = new Paint();
+            deletionZone.paint.setColor(attributes.getColor(R.styleable.GraphView_color, Color.RED));
+            deletionZone.paint.setAlpha(attributes.getInt(R.styleable.GraphView_zone_alpha, 128));
+        } else {
+            deletionZone = null;
         }
+        attributes.recycle();
     }
 
     @Override
@@ -82,15 +99,21 @@ public class GraphView<V, E extends DefaultEdge> extends View {
             return;
         }
 
-        // TODO: consider storing these as member variables to reduce
-        // allocations per draw cycle.
-        int paddingLeft = getPaddingLeft();
-        int paddingTop = getPaddingTop();
-        int paddingRight = getPaddingRight();
-        int paddingBottom = getPaddingBottom();
+        if (contentHeight < 0) {
+            int paddingTop = getPaddingTop();
+            int paddingBottom = getPaddingBottom();
+            contentHeight = getHeight() - paddingTop - paddingBottom;
+        }
+        if (contentWidth < 0) {
+            int paddingLeft = getPaddingLeft();
+            int paddingRight = getPaddingRight();
+            contentWidth = getWidth() - paddingLeft - paddingRight;
+        }
+        if (deletionZone != null && deletionZone.leftTop == null) {
+            deletionZone.rightButtom = coordinate2view(deletionZone.borders.first);
+            deletionZone.leftTop = coordinate2view(deletionZone.borders.second);
+        }
 
-        contentWidth = getWidth() - paddingLeft - paddingRight;
-        contentHeight = getHeight() - paddingTop - paddingBottom;
         Graph<V, E> g = controller.getGraph();
         for (V v : g.vertexSet()) {
             drawVertex(canvas, v);
@@ -98,6 +121,17 @@ public class GraphView<V, E extends DefaultEdge> extends View {
         for (E edge : g.edgeSet()) {
             drawEdge(canvas, edge, g.getEdgeSource(edge), g.getEdgeTarget(edge));
         }
+        if (deletionZone != null) {
+            drawDeletionZone(canvas);
+        }
+    }
+
+    private void drawDeletionZone(Canvas canvas) {
+        canvas.drawRect(deletionZone.leftTop.first,
+                deletionZone.leftTop.second,
+                deletionZone.rightButtom.first,
+                deletionZone.rightButtom.second,
+                deletionZone.paint);
     }
 
     protected void drawVertex(Canvas canvas, V v) {
@@ -181,13 +215,18 @@ public class GraphView<V, E extends DefaultEdge> extends View {
         Pair<Float, Float> xy2;
     }
 
-    private class DeletionZone {
-        Pair<Float, Float> topLeft;
-        Pair<Float, Float> buttomRight;
+    public class DeletionZone {
+        Pair<Float, Float> leftTop;
+        Pair<Float, Float> rightButtom;
+        Paint paint;
+        Pair<Coordinate, Coordinate> borders;
 
         boolean contains(Pair<Float, Float> other) {
-            return topLeft.first < other.first && buttomRight.first > other.first &&
-                    topLeft.second < other.second && buttomRight.second > other.second;
+            return ((leftTop.first < other.first) &&
+                    (rightButtom.first > other.first) &&
+                    (leftTop.second < other.second) &&
+                    (rightButtom.second > other.second)
+            );
         }
     }
 
@@ -256,10 +295,9 @@ public class GraphView<V, E extends DefaultEdge> extends View {
                 if (deletionZone != null && deletionZone.contains(dragging.xy)) {
                     update = controller.removeVertex(dragging.object);
                 } else {
-                    controller.update(dragging.old, pair2coordinate(dragging.xy));
-                    dragging.object = null;
-                    update = true;
+                    update = controller.update(dragging.old, pair2coordinate(dragging.xy));
                 }
+                dragging.object = null;
             }
             return update;
         }

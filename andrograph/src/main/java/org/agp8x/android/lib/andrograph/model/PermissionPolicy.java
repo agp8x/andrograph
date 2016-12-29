@@ -19,7 +19,7 @@ public interface PermissionPolicy<V, E extends DefaultEdge> {
     /**
      * Is deletion of given vertex allowed?
      *
-     * @param vertex vertex to delete
+     * @param vertex vertex to remove
      * @return whether given vertex may be deleted
      */
     boolean allowVertexDeletion(V vertex);

@@ -39,7 +39,7 @@ public interface GraphViewController<V, E extends DefaultEdge> extends
     /**
      * Delete vertex
      *
-     * @param vertex Vertex to delete
+     * @param vertex Vertex to remove
      * @return whether vertex was deleted
      */
     boolean removeVertex(V vertex);

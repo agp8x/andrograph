@@ -120,12 +120,21 @@ public class DefaultGraphViewController<V, E extends DefaultEdge> implements Gra
 
     @Override
     public V getSelected(Coordinate action) {
-        return positionProvider.getSelected(action);
+        V selected = positionProvider.getSelected(action);
+        if (!graph.containsVertex(selected)) {
+            selected = null;
+        }
+        return selected;
     }
 
     @Override
     public boolean setPosition(V vertex, Coordinate coordinate) {
         return allowMotion(vertex, coordinate) && positionProvider.setPosition(vertex, coordinate);
+    }
+
+    @Override
+    public void remove(V vertex) {
+        positionProvider.remove(vertex);
     }
 
     @Override
@@ -180,6 +189,7 @@ public class DefaultGraphViewController<V, E extends DefaultEdge> implements Gra
 
     @Override
     public boolean removeVertex(V vertex) {
+        remove(vertex);
         return allowVertexDeletion(vertex) && graph.removeVertex(vertex);
     }
 
@@ -201,9 +211,9 @@ public class DefaultGraphViewController<V, E extends DefaultEdge> implements Gra
     @Override
     public boolean addOrRemoveEdge(V source, V target) {
         if (edgeEventHandler != null) {
-           if( edgeEventHandler.edgeSelected(source, target, graph.getEdge(source, target))){
-               return true;
-           }
+            if (edgeEventHandler.edgeSelected(source, target, graph.getEdge(source, target))) {
+                return true;
+            }
         }
         if (graph.containsEdge(source, target)) {
             return removeEdge(source, target);
