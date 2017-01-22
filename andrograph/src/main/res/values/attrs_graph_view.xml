@@ -1,10 +1,10 @@
 <resources>
     <declare-styleable name="GraphView">
-        <attr name="buttom" format="float"/>
-        <attr name="right" format="float"/>
-        <attr name="top" format="float"/>
-        <attr name="left" format="float"/>
-        <attr name="color" format="color"/>
-        <attr name="zone_alpha" format="integer"/>
+        <attr name="deletionZoneBottom" format="float"/>
+        <attr name="deletionZoneRight" format="float"/>
+        <attr name="deletionZoneTop" format="float"/>
+        <attr name="deletionZoneLeft" format="float"/>
+        <attr name="deletionZoneColor" format="color"/>
+        <attr name="deletionZoneAlpha" format="integer"/>
     </declare-styleable>
 </resources>

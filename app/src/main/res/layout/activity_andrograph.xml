@@ -21,10 +21,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/graphview"
-        andrograph:top="0.1"
-        andrograph:buttom="0.2"
-        andrograph:left="0.7"
-        andrograph:right="0.9"
+        andrograph:deletionZoneTop="0.1"
+        andrograph:deletionZoneBottom="0.2"
+        andrograph:deletionZoneLeft="0.7"
+        andrograph:deletionZoneRight="0.9"
         />
 
     <Switch

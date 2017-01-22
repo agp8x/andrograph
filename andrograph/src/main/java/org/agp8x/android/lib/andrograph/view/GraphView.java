@@ -71,20 +71,20 @@ public class GraphView<V, E extends DefaultEdge> extends View {
         setOnTouchListener(new GraphOnTouchListener());
 
         final TypedArray attributes = getContext().obtainStyledAttributes(attrs, R.styleable.GraphView, defStyle, 0);
-        if (attributes.hasValue(R.styleable.GraphView_buttom) &&
-                attributes.hasValue(R.styleable.GraphView_right) &&
-                attributes.hasValue(R.styleable.GraphView_top) &&
-                attributes.hasValue(R.styleable.GraphView_left)
+        if (attributes.hasValue(R.styleable.GraphView_deletionZoneBottom) &&
+                attributes.hasValue(R.styleable.GraphView_deletionZoneRight) &&
+                attributes.hasValue(R.styleable.GraphView_deletionZoneTop) &&
+                attributes.hasValue(R.styleable.GraphView_deletionZoneLeft)
                 ) {
             deletionZone = new DeletionZone();
-            float x1 = attributes.getFloat(R.styleable.GraphView_right, 0);
-            float y1 = attributes.getFloat(R.styleable.GraphView_buttom, 0);
-            float x2 = attributes.getFloat(R.styleable.GraphView_left, 0);
-            float y2 = attributes.getFloat(R.styleable.GraphView_top, 0);
+            float x1 = attributes.getFloat(R.styleable.GraphView_deletionZoneRight, 0);
+            float y1 = attributes.getFloat(R.styleable.GraphView_deletionZoneBottom, 0);
+            float x2 = attributes.getFloat(R.styleable.GraphView_deletionZoneLeft, 0);
+            float y2 = attributes.getFloat(R.styleable.GraphView_deletionZoneTop, 0);
             deletionZone.borders = new Pair<>(new Coordinate(x1, y1), new Coordinate(x2, y2));
             deletionZone.paint = new Paint();
-            deletionZone.paint.setColor(attributes.getColor(R.styleable.GraphView_color, Color.RED));
-            deletionZone.paint.setAlpha(attributes.getInt(R.styleable.GraphView_zone_alpha, 128));
+            deletionZone.paint.setColor(attributes.getColor(R.styleable.GraphView_deletionZoneColor, Color.RED));
+            deletionZone.paint.setAlpha(attributes.getInt(R.styleable.GraphView_deletionZoneAlpha, 128));
         } else {
             deletionZone = null;
         }
