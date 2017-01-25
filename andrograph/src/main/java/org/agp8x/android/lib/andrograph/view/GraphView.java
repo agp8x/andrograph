@@ -22,13 +22,13 @@ import org.jgrapht.graph.DefaultEdge;
  */
 public class GraphView<V, E extends DefaultEdge> extends View {
     private GraphViewController<V, E> controller;
-    private Dragging dragging;
+    protected Dragging dragging;
     private int contentWidth = -1;
     private int contentHeight = -1;
     private boolean insertionMode = true;
-    private VertexInfo vertexStyle;
-    private EdgeInfo edgeStyle;
-    private DeletionZone deletionZone;
+    protected VertexInfo vertexStyle;
+    protected EdgeInfo edgeStyle;
+    protected DeletionZone deletionZone;
 
     public void setInsertionMode(boolean insertionMode) {
         this.insertionMode = insertionMode;
