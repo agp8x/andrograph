@@ -197,20 +197,20 @@ public class GraphView<V, E extends DefaultEdge> extends View {
         return new Coordinate(event.getX() / contentWidth, event.getY() / contentHeight);
     }
 
-    private class Dragging {
+    public class Dragging {
         public V object;
         public Coordinate old;
         public Pair<Float, Float> xy;
     }
 
-    private class VertexInfo {
+    public class VertexInfo {
         public Pair<Float, Float> xy;
         public Paint paint;
         public Pair<Float, Float> xyLabel;
         public String label;
     }
 
-    private class EdgeInfo {
+    public class EdgeInfo {
         public Pair<Float, Float> xy1;
         public Pair<Float, Float> xy2;
     }
