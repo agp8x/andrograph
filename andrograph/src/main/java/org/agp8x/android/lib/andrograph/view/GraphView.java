@@ -21,7 +21,7 @@ import org.jgrapht.graph.DefaultEdge;
  * 30.11.16.
  */
 public class GraphView<V, E extends DefaultEdge> extends View {
-    private GraphViewController<V, E> controller;
+    protected GraphViewController<V, E> controller;
     protected Dragging dragging;
     private int contentWidth = -1;
     private int contentHeight = -1;
