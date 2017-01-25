@@ -198,28 +198,28 @@ public class GraphView<V, E extends DefaultEdge> extends View {
     }
 
     private class Dragging {
-        protected V object;
-        protected Coordinate old;
-        protected Pair<Float, Float> xy;
+        public V object;
+        public Coordinate old;
+        public Pair<Float, Float> xy;
     }
 
     private class VertexInfo {
-        protected Pair<Float, Float> xy;
-        protected Paint paint;
-        protected Pair<Float, Float> xyLabel;
-        protected String label;
+        public Pair<Float, Float> xy;
+        public Paint paint;
+        public Pair<Float, Float> xyLabel;
+        public String label;
     }
 
     private class EdgeInfo {
-        protected Pair<Float, Float> xy1;
-        protected Pair<Float, Float> xy2;
+        public Pair<Float, Float> xy1;
+        public Pair<Float, Float> xy2;
     }
 
     public class DeletionZone {
-        protected Pair<Float, Float> leftTop;
-        protected Pair<Float, Float> rightButtom;
-        protected Paint paint;
-        protected Pair<Coordinate, Coordinate> borders;
+        public Pair<Float, Float> leftTop;
+        public Pair<Float, Float> rightButtom;
+        public Paint paint;
+        public Pair<Coordinate, Coordinate> borders;
 
         boolean contains(Pair<Float, Float> other) {
             return ((leftTop.first < other.first) &&
