@@ -14,8 +14,8 @@ import java.util.Map;
  */
 
 public class MapPositionProvider<V> implements PositionProvider<V> {
-    private final Coordinate fallback;
-    private Map<V, Coordinate> positionMap;
+    protected final Coordinate fallback;
+    protected Map<V, Coordinate> positionMap;
 
     public MapPositionProvider(Map<V, Coordinate> positionMap, Coordinate fallback) {
         this.positionMap = positionMap;
