@@ -1,9 +1,9 @@
-package org.agp8x.android.lib.andrograph.model.defaults;
+package org.agp8x.android.lib.andrograph.model;
 
 import org.jgrapht.graph.DefaultEdge;
 
 /**
- * Provides an hook into the addOrRemoveEdge method of a DefaultGraphViewController instance to
+ * Provides an hook into the addOrRemoveEdge method of a GraphViewController instance to
  * consume edge update events
  *
  * @author clemensk

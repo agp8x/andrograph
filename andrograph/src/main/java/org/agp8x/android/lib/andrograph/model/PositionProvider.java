@@ -1,5 +1,7 @@
 package org.agp8x.android.lib.andrograph.model;
 
+import android.support.annotation.Nullable;
+
 /**
  * Provide and store relative positions of vertices
  *
@@ -31,6 +33,7 @@ public interface PositionProvider<V> {
      * @param action {@link Coordinate} to find vertex for
      * @return vertex on given {@link Coordinate} -- {@code null} if no vertex was found
      */
+    @Nullable
     V getSelected(Coordinate action);
 
     /**
@@ -44,6 +47,7 @@ public interface PositionProvider<V> {
 
     /**
      * Remove vertex
+     *
      * @param vertex vertex to remove
      */
     void remove(V vertex);

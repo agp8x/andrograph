@@ -11,7 +11,7 @@ import org.jgrapht.VertexFactory;
  */
 
 public class StringVertexFactory<String> implements VertexFactory<String> {
-    private int count;
+    protected int count;
 
     public StringVertexFactory() {
         count = 0;

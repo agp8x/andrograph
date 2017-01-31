@@ -1,12 +1,15 @@
 package org.agp8x.android.lib.andrograph.model.defaults;
 
 import android.graphics.Paint;
+import android.support.annotation.Nullable;
 
 import org.agp8x.android.lib.andrograph.model.Coordinate;
+import org.agp8x.android.lib.andrograph.model.EdgeEvent;
 import org.agp8x.android.lib.andrograph.model.EdgePaintProvider;
 import org.agp8x.android.lib.andrograph.model.GraphViewController;
 import org.agp8x.android.lib.andrograph.model.PermissionPolicy;
 import org.agp8x.android.lib.andrograph.model.PositionProvider;
+import org.agp8x.android.lib.andrograph.model.VertexEvent;
 import org.agp8x.android.lib.andrograph.model.VertexPaintProvider;
 import org.jgrapht.Graph;
 import org.jgrapht.VertexFactory;
@@ -24,13 +27,14 @@ import java.util.HashMap;
  */
 
 public class DefaultGraphViewController<V, E extends DefaultEdge> implements GraphViewController<V, E> {
-    private final EdgePaintProvider<E> edgePaintProvider;
-    private final VertexFactory<V> vertexFactory;
-    private final Graph<V, E> graph;
-    private final PositionProvider<V> positionProvider;
-    private final VertexPaintProvider<V> vertexPaintProvider;
-    private final PermissionPolicy<V, E> permissionPolicy;
-    private EdgeEvent<V, E> edgeEventHandler;
+    protected final EdgePaintProvider<E> edgePaintProvider;
+    protected final VertexFactory<V> vertexFactory;
+    protected final Graph<V, E> graph;
+    protected final PositionProvider<V> positionProvider;
+    protected final VertexPaintProvider<V> vertexPaintProvider;
+    protected final PermissionPolicy<V, E> permissionPolicy;
+    protected EdgeEvent<V, E> edgeEventHandler;
+    protected VertexEvent<V> vertexEventHandler;
 
     /**
      * initialize with all-default providers, factories and an empty graph
@@ -103,8 +107,14 @@ public class DefaultGraphViewController<V, E extends DefaultEdge> implements Gra
         this.permissionPolicy = permissionPolicy;
     }
 
-    public void setEdgeEventHandler(EdgeEvent handler) {
-        this.edgeEventHandler = handler;
+    @Override
+    public void setVertexEventHandler(@Nullable VertexEvent handler) {
+        vertexEventHandler = handler;
+    }
+
+    @Override
+    public void setEdgeEventHandler(@Nullable EdgeEvent handler) {
+        edgeEventHandler = handler;
     }
 
     @Override
@@ -123,6 +133,11 @@ public class DefaultGraphViewController<V, E extends DefaultEdge> implements Gra
         V selected = positionProvider.getSelected(action);
         if (!graph.containsVertex(selected)) {
             selected = null;
+        }
+        if (vertexEventHandler != null) {
+            if (vertexEventHandler.vertexSelected(selected)) {
+                selected = null;
+            }
         }
         return selected;
     }
@@ -193,7 +208,7 @@ public class DefaultGraphViewController<V, E extends DefaultEdge> implements Gra
         return allowVertexDeletion(vertex) && graph.removeVertex(vertex);
     }
 
-    private boolean addEdge(V source, V target) {
+    protected boolean addEdge(V source, V target) {
         if (allowEdgeInsertion(source, target)) {
             try {
                 return null != graph.addEdge(source, target);
@@ -204,7 +219,7 @@ public class DefaultGraphViewController<V, E extends DefaultEdge> implements Gra
         return false;
     }
 
-    private boolean removeEdge(V source, V target) {
+    protected boolean removeEdge(V source, V target) {
         return allowEdgeDeletion(source, target) && null != graph.removeEdge(source, target);
     }
 

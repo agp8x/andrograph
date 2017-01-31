@@ -14,10 +14,10 @@ import org.agp8x.android.lib.andrograph.model.VertexPaintProvider;
  *         30.11.16.
  */
 public class DefaultVertexPaintProvider<V> implements VertexPaintProvider<V> {
-    private Paint fallback;
-   private  Paint selected;
-    private Paint labelPaint;
-    private Coordinate offset;
+    protected Paint fallback;
+    protected Paint selected;
+    protected Paint labelPaint;
+    protected Coordinate offset;
 
     public DefaultVertexPaintProvider() {
         fallback = new Paint();
@@ -34,7 +34,7 @@ public class DefaultVertexPaintProvider<V> implements VertexPaintProvider<V> {
         labelPaint.setTextSize(25);
         labelPaint.setStrokeWidth(2);
 
-        offset = new Coordinate(-0.01,0.01);
+        offset = new Coordinate(-0.01, 0.01);
     }
 
     @Override

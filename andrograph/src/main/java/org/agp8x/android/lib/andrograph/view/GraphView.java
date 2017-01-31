@@ -23,9 +23,9 @@ import org.jgrapht.graph.DefaultEdge;
 public class GraphView<V, E extends DefaultEdge> extends View {
     protected GraphViewController<V, E> controller;
     protected Dragging dragging;
-    private int contentWidth = -1;
-    private int contentHeight = -1;
-    private boolean insertionMode = true;
+    protected int contentWidth = -1;
+    protected int contentHeight = -1;
+    protected boolean insertionMode = true;
     protected VertexInfo vertexStyle;
     protected EdgeInfo edgeStyle;
     protected DeletionZone deletionZone;

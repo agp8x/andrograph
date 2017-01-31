@@ -14,7 +14,7 @@ import org.jgrapht.graph.DefaultEdge;
  *         30.11.16.
  */
 public class DefaultEdgePaintProvider<E extends DefaultEdge> implements EdgePaintProvider<E> {
-    Paint fallback;
+    protected Paint fallback;
 
     public DefaultEdgePaintProvider() {
         fallback = new Paint();

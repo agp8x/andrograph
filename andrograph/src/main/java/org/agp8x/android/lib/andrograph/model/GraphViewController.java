@@ -1,5 +1,7 @@
 package org.agp8x.android.lib.andrograph.model;
 
+import android.support.annotation.Nullable;
+
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 
@@ -21,6 +23,20 @@ public interface GraphViewController<V, E extends DefaultEdge> extends
         EdgePaintProvider<E>,
         VertexPaintProvider<V>,
         PermissionPolicy<V, E> {
+    /**
+     * Set {@link VertexEvent} to handle actions when a vertex is selected.
+     * Setting to null should cause default behaviour of selecting for dragging and {@link EdgeEvent}s
+     */
+    void setVertexEventHandler(@Nullable VertexEvent handler);
+
+    /**
+     * Set {@link EdgeEvent} to handle actions when two vertices are selected.
+     * Setting to null should cause default behaviour of creating and deleting edges.
+     *
+     * @param handler {@link EdgeEvent} to be active (my be null)
+     */
+    void setEdgeEventHandler(@Nullable EdgeEvent handler);
+
     /**
      * Get {@link Graph}
      *
