@@ -50,7 +50,11 @@ By not consuming the event (return false), the default action will be performed.
 This can be used e.g. to catch selection of edges, store it somehow, and paint it differently (via reference to an EdgePaintProvider)
 
 ## Architecture
+### Interfaces
 ![diagram](https://cloud.githubusercontent.com/assets/1840171/23174786/cd987b6c-f85d-11e6-9cc8-1e24dcbdd8b9.png)
+
+### Defaults
+![diagram2](https://cloud.githubusercontent.com/assets/1840171/23174878/0b411b72-f85e-11e6-9057-15f59d8e7ade.png)
 
 ## Credits
 * with support from [CaptBlackTea](https://github.com/CaptBlackTea)
