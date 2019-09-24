@@ -1,6 +1,7 @@
 package org.agp8x.android.lib.andrograph.model.defaults;
 
-import org.jgrapht.VertexFactory;
+
+import java.util.function.Supplier;
 
 /**
  * create new vertices with an increasing int as label
@@ -10,7 +11,7 @@ import org.jgrapht.VertexFactory;
  *         30.11.16.
  */
 
-public class StringVertexFactory<String> implements VertexFactory<String> {
+public class StringVertexFactory<String> implements Supplier<String> {
     protected int count;
 
     public StringVertexFactory() {
@@ -18,8 +19,9 @@ public class StringVertexFactory<String> implements VertexFactory<String> {
     }
 
     @Override
-    public String createVertex() {
+    public String get() {
         count++;
         return (String) Integer.toString(count);
     }
+
 }

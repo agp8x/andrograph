@@ -22,9 +22,10 @@ import org.agp8x.android.lib.andrograph.model.defaults.RestrictedPermissionPolic
 import org.agp8x.android.lib.andrograph.model.defaults.StringVertexFactory;
 import org.agp8x.android.lib.andrograph.test.TestData;
 import org.agp8x.android.lib.andrograph.view.GraphView;
-import org.jgrapht.VertexFactory;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
+
+import java.util.function.Supplier;
 
 /**
  * sample activity to work with graphs
@@ -50,7 +51,7 @@ public class Andrograph extends AppCompatActivity {
         PositionProvider<String> positionProvider = new MapPositionProvider<>(TestData.getStringDefaultEdgeSimpleGraphPositions(), new Coordinate(0.5, 0.8));
         EdgePaintProvider<DefaultEdge> epp = new DefaultEdgePaintProvider<>();
         VertexPaintProvider<String> vpp = new DefaultVertexPaintProvider<>();
-        VertexFactory<String> vf = new StringVertexFactory<>();
+        Supplier<String> vf = new StringVertexFactory<>();
         PermissionPolicy<String, DefaultEdge> pp = new DefaultPermissionPolicy<>();
         //pp=new RestrictedPermissionPolicy<>();
         GraphViewController<String, DefaultEdge> gvc = new DefaultGraphViewController<>(graph, positionProvider, epp, vpp, vf, pp);

@@ -12,11 +12,11 @@ import org.agp8x.android.lib.andrograph.model.PositionProvider;
 import org.agp8x.android.lib.andrograph.model.VertexEvent;
 import org.agp8x.android.lib.andrograph.model.VertexPaintProvider;
 import org.jgrapht.Graph;
-import org.jgrapht.VertexFactory;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 
 import java.util.HashMap;
+import java.util.function.Supplier;
 
 /**
  * Orchestrate all providers and factories
@@ -28,7 +28,7 @@ import java.util.HashMap;
 
 public class DefaultGraphViewController<V, E extends DefaultEdge> implements GraphViewController<V, E> {
     protected final EdgePaintProvider<E> edgePaintProvider;
-    protected final VertexFactory<V> vertexFactory;
+    protected final Supplier<V> vertexFactory;
     protected final Graph<V, E> graph;
     protected final PositionProvider<V> positionProvider;
     protected final VertexPaintProvider<V> vertexPaintProvider;
@@ -54,7 +54,7 @@ public class DefaultGraphViewController<V, E extends DefaultEdge> implements Gra
      * @param graph
      * @param vertexFactory
      */
-    public DefaultGraphViewController(Graph<V, E> graph, VertexFactory<V> vertexFactory) {
+    public DefaultGraphViewController(Graph<V, E> graph, Supplier<V> vertexFactory) {
         this.graph = graph;
         this.vertexFactory = vertexFactory;
         edgePaintProvider = new DefaultEdgePaintProvider<>();
@@ -65,15 +65,14 @@ public class DefaultGraphViewController<V, E extends DefaultEdge> implements Gra
 
     /**
      * Use custom {@link GraphViewController} for providers
-     *
-     * @param controller
+     *  @param controller
      * @param graph
      * @param vertexFactory
      */
     public DefaultGraphViewController(
             GraphViewController<V, E> controller,
             Graph<V, E> graph,
-            VertexFactory<V> vertexFactory) {
+            Supplier<V> vertexFactory) {
         this.vertexFactory = vertexFactory;
         this.graph = graph;
         edgePaintProvider = controller;
@@ -84,8 +83,7 @@ public class DefaultGraphViewController<V, E extends DefaultEdge> implements Gra
 
     /**
      * PASS ALL THE PROVIDERS!
-     *
-     * @param graph               {@link Graph} instance
+     *  @param graph               {@link Graph} instance
      * @param positionProvider
      * @param edgePaintProvider
      * @param vertexPaintProvider
@@ -97,7 +95,7 @@ public class DefaultGraphViewController<V, E extends DefaultEdge> implements Gra
             PositionProvider<V> positionProvider,
             EdgePaintProvider<E> edgePaintProvider,
             VertexPaintProvider<V> vertexPaintProvider,
-            VertexFactory<V> vertexFactory,
+            Supplier<V> vertexFactory,
             PermissionPolicy<V, E> permissionPolicy) {
         this.graph = graph;
         this.positionProvider = positionProvider;
@@ -197,7 +195,7 @@ public class DefaultGraphViewController<V, E extends DefaultEdge> implements Gra
         if (vertexFactory == null || !allowVertexInsertion()) {
             return false;
         }
-        V vertex = vertexFactory.createVertex();
+        V vertex = vertexFactory.get();
         graph.addVertex(vertex);
         return positionProvider.setPosition(vertex, coordinate);
     }
